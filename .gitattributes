@@ -1,0 +1,10 @@
+# Text files are normalized to LF in the repository; Windows checkouts get CRLF where Git converts them.
+* text=auto
+
+# PowerShell 5.1 reads scripts best with CRLF.
+*.ps1 text eol=crlf
+
+# Binary assets
+*.ttf binary
+*.png binary
+*.jpg binary

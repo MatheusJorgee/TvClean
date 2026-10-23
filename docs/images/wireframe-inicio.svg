@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" font-family="Arial, Helvetica, sans-serif">
+  <title>TvClean: wireframe da tela Início (1920x1080, mesmas medidas do launcher)</title>
+  <defs>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0.55" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Tela -->
+  <rect x="0" y="0" width="1920" height="1080" fill="#FFFFFF"/>
+
+  <!-- Fundo: imagem do título em alta (0..800), com degradê para baixo -->
+  <rect x="0" y="0" width="1920" height="800" fill="#EEF0F3"/>
+  <line x1="700" y1="0" x2="1920" y2="800" stroke="#C9CDD3" stroke-width="3" stroke-dasharray="14 10"/>
+  <line x1="1920" y1="0" x2="700" y2="800" stroke="#C9CDD3" stroke-width="3" stroke-dasharray="14 10"/>
+  <rect x="0" y="0" width="1920" height="800" fill="url(#fade)"/>
+  <text x="1310" y="300" font-size="26" fill="#80868B" text-anchor="middle">Imagem do título em alta no app em foco</text>
+  <text x="1310" y="336" font-size="22" fill="#9AA0A6" text-anchor="middle">(TMDB / YouTube · classificação abaixo de 18)</text>
+
+  <!-- Cabeçalho -->
+  <rect x="96" y="54" width="109" height="52" rx="26" fill="#D7DBE0"/>
+  <text x="150" y="88" font-size="24" font-weight="bold" fill="#202124" text-anchor="middle">Início</text>
+  <text x="272" y="88" font-size="24" fill="#5F6368" text-anchor="middle">Apps</text>
+  <text x="414" y="88" font-size="24" fill="#5F6368" text-anchor="middle">Entradas</text>
+  <text x="539" y="88" font-size="24" fill="#5F6368" text-anchor="middle">TV</text>
+
+  <circle cx="1387" cy="80" r="28" fill="#D7DBE0"/>
+  <path d="M1375 78 a17 17 0 0 1 24 0 M1379 83 a11 11 0 0 1 16 0" fill="none" stroke="#3C4043" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="1387" cy="88" r="2" fill="#3C4043"/>
+  <circle cx="1455" cy="80" r="28" fill="#D7DBE0"/>
+  <circle cx="1455" cy="80" r="9" fill="none" stroke="#3C4043" stroke-width="2.5"/>
+  <circle cx="1455" cy="80" r="3.5" fill="none" stroke="#3C4043" stroke-width="2.5"/>
+  <circle cx="1515" cy="80" r="11" fill="none" stroke="#5F6368" stroke-width="2.5"/>
+  <text x="1538" y="88" font-size="24" fill="#5F6368">22° Cidade</text>
+  <text x="1824" y="92" font-size="34" font-weight="bold" fill="#202124" text-anchor="end">20:30</text>
+
+  <!-- Destaque -->
+  <rect x="96" y="232" width="232" height="39" rx="19" fill="#9AA0A6"/>
+  <text x="114" y="258" font-size="19" font-weight="bold" fill="#FFFFFF">Em alta no [serviço]</text>
+  <text x="96" y="372" font-size="86" font-weight="bold" fill="#202124">Título da série em alta</text>
+  <text x="96" y="436" font-size="26" fill="#5F6368">Série · Sinopse do título em alta, em até duas linhas,</text>
+  <text x="96" y="480" font-size="26" fill="#5F6368">cortada com reticências quando passa disso…</text>
+  <rect x="96" y="514" width="210" height="64" rx="32" fill="#3C4043"/>
+  <text x="201" y="555" font-size="24" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Abrir [app]</text>
+
+  <!-- Seus apps: blocos 300x169, espaço 28, rolam para o lado -->
+  <text x="96" y="634" font-size="24" fill="#5F6368">Seus apps</text>
+  <g font-size="26" fill="#5F6368" text-anchor="middle">
+    <rect x="84" y="662" width="324" height="183" rx="22" fill="#E8EAED" stroke="#202124" stroke-width="6"/>
+    <rect x="98" y="676" width="122" height="30" rx="15" fill="#3C4043"/>
+    <text x="159" y="697" font-size="17" font-weight="bold" fill="#FFFFFF">Continuar</text>
+    <text x="246" y="770">Último app usado</text>
+
+    <rect x="424" y="669" width="300" height="169" rx="22" fill="#E8EAED" stroke="#9AA0A6" stroke-width="2"/>
+    <text x="574" y="762">App</text>
+    <rect x="752" y="669" width="300" height="169" rx="22" fill="#E8EAED" stroke="#9AA0A6" stroke-width="2"/>
+    <text x="902" y="762">App</text>
+    <rect x="1080" y="669" width="300" height="169" rx="22" fill="#E8EAED" stroke="#9AA0A6" stroke-width="2"/>
+    <text x="1230" y="762">App</text>
+    <rect x="1408" y="669" width="300" height="169" rx="22" fill="#E8EAED" stroke="#9AA0A6" stroke-width="2"/>
+    <text x="1558" y="762">App</text>
+    <rect x="1736" y="669" width="300" height="169" rx="22" fill="#E8EAED" stroke="#9AA0A6" stroke-width="2"/>
+    <text x="1828" y="762">App</text>
+  </g>
+
+  <!-- Entradas -->
+  <text x="96" y="910" font-size="24" fill="#5F6368">Entradas</text>
+  <g font-size="22">
+    <rect x="96" y="930" width="282" height="72" rx="36" fill="#E8EAED"/>
+    <circle cx="130" cy="966" r="6" fill="#9AA0A6"/>
+    <text x="150" y="974" font-weight="bold" fill="#202124">HDMI 1</text>
+    <text x="236" y="974" fill="#80868B">em espera</text>
+
+    <rect x="394" y="930" width="294" height="72" rx="36" fill="#E8EAED"/>
+    <circle cx="428" cy="966" r="6" fill="#5F6368"/>
+    <text x="448" y="974" font-weight="bold" fill="#202124">HDMI 2</text>
+    <text x="534" y="974" fill="#80868B">conectado</text>
+
+    <rect x="705" y="930" width="247" height="72" rx="36" fill="#E8EAED"/>
+    <circle cx="739" cy="966" r="6" fill="#5F6368"/>
+    <text x="759" y="974" font-weight="bold" fill="#202124">AV</text>
+    <text x="802" y="974" fill="#80868B">conectado</text>
+
+    <rect x="969" y="930" width="279" height="72" rx="36" fill="#E8EAED"/>
+    <circle cx="1003" cy="966" r="6" fill="#9AA0A6"/>
+    <text x="1023" y="974" font-weight="bold" fill="#202124">TV Aberta</text>
+    <text x="1142" y="974" fill="#80868B">antena</text>
+  </g>
+
+  <rect x="2" y="2" width="1916" height="1076" fill="none" stroke="#5F6368" stroke-width="4"/>
+</svg>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_service_label">TvClean: painel rápido</string>
+    <string name="key_service_description">Segure o botão Início do controle em qualquer app para abrir o painel de atalhos do TvClean. Lê apenas o botão Início; não lê o conteúdo da tela.</string>
+</resources>

@@ -1,0 +1,32 @@
+# Build output (launcher\build.ps1) and any APK
+launcher/build/
+*.apk
+
+# Secrets: API keys and signing keys never go in git.
+# The keystore and its password live in %USERPROFILE%\.tvclean (see README).
+tv/*.key
+*.keystore
+*.jks
+keystore.pass
+
+# This TV's own data: full backup (serial, MACs, settings), the remembered serial number and the
+# weather's city (where the TV is)
+backup/
+tv/tv.serial
+tv/city.txt
+
+# Local test runs (screen captures with third-party artwork, process logs)
+tv/measurements/
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Skills/agents installed locally by AI tools (npx skills, Claude Code): not part of the project
+.agents/
+.claude/
+skills-lock.json

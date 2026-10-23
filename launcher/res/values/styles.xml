@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark from the first frame: when the system has to restart Home, its starting window is this
+         color instead of the white of a Light theme. -->
+    <style name="Home" parent="@android:style/Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowBackground">@drawable/window</item>
+        <item name="android:colorBackground">#0B0D12</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>

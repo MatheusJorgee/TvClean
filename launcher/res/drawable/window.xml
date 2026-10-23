@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- What a cold start of Home shows before the first frame: the ground color with the backdrop's dusk tint. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#0B0D12" />
+        </shape>
+    </item>
+    <item android:gravity="top" android:height="400dp">
+        <shape android:shape="rectangle">
+            <gradient android:angle="270" android:startColor="#1A1F33" android:endColor="#0B0D12" />
+        </shape>
+    </item>
+</layer-list>

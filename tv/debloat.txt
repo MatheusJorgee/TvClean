@@ -1,0 +1,47 @@
+# TCL FHD 2021, product C06_2K_GB, Android TV 11 (AR2101),
+# MediaTek MT9221 (mt5867), 943 MB RAM, low_ram. Firmware V8-T221T01.
+# Close twin of cleanyourtv examples/tcl-40s5400a (same platform, EU firmware).
+#
+# Apply:  .\tv\debloat.ps1 -TvHost <ip>
+# Undo:   .\tv\debloat.ps1 -TvHost <ip> -Undo
+# Everything is DISABLED (pm disable-user), never uninstalled.
+#
+# Kept on purpose (used by the owner): Chromecast (apps.mediashell), phone remote (tv.remote.service),
+# USB media (tcl.ui_mediaCenter + players), Prime Video, Disney+, YouTube Music.
+# tcl.micmanager is kept too (remote's microphone plumbing), though voice search is now off.
+#
+# DO NOT DISABLE on this TV:
+# com.tcl.tv com.tcl.tvinput             Live TV, HDMI/AV playback and the Input key's source picker
+# com.tcl.system.server com.tcl.keyhelp  remote-key plumbing
+# com.tcl.tcl_bt_rcu_service com.tcl.autopair com.tcl.rc.ota   Bluetooth remote, pairing, remote firmware
+# com.tcl.settings com.tcl.suspension    picture/sound panel, quick panel
+# com.tcl.messagebox                     carries a receiver of the updater; kept to be safe
+# com.tcl.providers.config com.tcl.initsetup   reported to drop Wi-Fi on other TCLs
+# com.tcl.inputmethod.international      the keyboard in use
+# com.android.location.fused             bootloop when disabled (reported)
+
+# Stock home and its recommendation rows: replaced by launcher/
+com.google.android.tvrecommendations
+
+# TCL extras, promos and telemetry
+com.tcl.guard                          # TGuard "cleaner", always running (~21 MB)
+com.tcl.usercenter                     # TCL account (the system may switch it back on at boot)
+com.tcl.partnercustomizer              # promo rows
+com.tcl.waterfall.overseas             # TCL web-video portal
+com.tcl.esticker                       # store-demo sticker
+android.autoinstalls.config.tcl.device # partner-app auto installer
+com.tcl.smartalexa                     # Alexa bridge, not used
+
+com.tcl.ttvs                           # firmware updater: 3 processes, ~48 MB, and it switches TCL apps
+                                       # back on. Re-enable to look for a firmware update: pm enable com.tcl.ttvs
+
+# Google extras
+com.google.android.tts                 # text-to-speech, only used for accessibility (owner OK, 2026-10-19)
+com.google.android.katniss             # Google app: voice search and Assistant; ~50 MB RAM (owner OK, 2026-10-20).
+                                       # The remote's microphone button stops working with it off.
+com.google.android.tv.assistant        # Assistant stub that goes with it
+com.google.android.feedback
+com.google.android.syncadapters.calendar
+com.google.android.inputmethod.latin   # Gboard: installed but not the active keyboard
+com.google.android.apps.nbu.smartconnect.tv # data-usage meter/saver for metered links (~23 MB)
+com.google.android.backdrop            # photo screensaver; debloat.ps1 switches to the basic one first
