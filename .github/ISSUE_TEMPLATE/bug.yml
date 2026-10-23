@@ -1,0 +1,30 @@
+name: Bug
+description: Something in TvClean does not work as it should.
+labels: ["bug"]
+body:
+  - type: input
+    id: tv
+    attributes:
+      label: TV and Android version
+      placeholder: TCL C06_2K_GB, Android 11
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to make it happen again
+      placeholder: |
+        1. Go to Apps
+        2. Hold OK on an app
+  - type: textarea
+    id: log
+    attributes:
+      label: Script output or log (optional)
+      description: For a crash, `adb logcat -d -s AndroidRuntime:E` right after it happens.
+      render: text

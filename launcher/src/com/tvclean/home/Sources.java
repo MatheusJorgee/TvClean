@@ -67,7 +67,7 @@ final class Sources {
             "com.tcl.smartalexa",
             "com.tcl.dashboard",
             "com.tcl.suspension",
-            // Disabled by tv/debloat.txt, but TCL's services switch them back on from time to time.
+            // Disabled by tv/devices/C06_2K_GB.txt, but TCL's services switch them back on from time to time.
             "com.tcl.waterfall.overseas",
             "com.tcl.usercenter"));
 
@@ -317,10 +317,14 @@ final class Sources {
         return 2;
     }
 
-    static Intent inputIntent(Input in) {
+    /** Opens an input; the antenna goes to TCL's live TV app when the TV has it, else to whatever handles channels. */
+    static Intent inputIntent(Context c, Input in) {
         Uri uri = TvContract.buildChannelUriForPassthroughInput(in.id);
         Intent i = new Intent(Intent.ACTION_VIEW).setDataAndType(uri, "vnd.android.cursor.item/channel");
-        if (in.tuner) i.setPackage(LIVE_TV_PKG);
+        if (in.tuner) {
+            i.setPackage(LIVE_TV_PKG);
+            if (c.getPackageManager().resolveActivity(i, 0) == null) i.setPackage(null);
+        }
         return i;
     }
 

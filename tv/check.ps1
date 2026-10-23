@@ -4,6 +4,7 @@
 param([Parameter(Mandatory = $true)][string]$TvHost, [switch]$ReportOnly)
 . "$PSScriptRoot\common.ps1"
 $target = Connect-Tv $TvHost
+$DebloatPackages = Get-DebloatPackages
 $fixed = 0
 $issues = 0
 

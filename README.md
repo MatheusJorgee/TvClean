@@ -1,197 +1,230 @@
-# TvClean: uma TV TCL lenta, rápida de novo
+# TvClean: make a slow Android TV fast again
 
-Uma tela inicial leve para Android TV e os scripts que tiraram uma TCL de 2021 do "travando em
-tudo": limpeza de apps de fábrica, ajustes de memória e manutenção automática. Sem root e reversível.
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/MatheusJorgee/TvClean)](https://github.com/MatheusJorgee/TvClean/releases/latest)
+![Android TV 8+](https://img.shields.io/badge/Android%20TV-8%2B-3ddc84)
 
-![Tela Início do TvClean](docs/images/tvclean-inicio.png)
+**English** · [Português](README.pt-BR.md)
 
-Feito para uma TCL com MediaTek MT9221 (`C06_2K_GB`), Android TV 11 e 943 MB de RAM. O launcher
-roda em qualquer Android TV 8+; os scripts servem de modelo para outras TVs.
+A lightweight home screen for Android TV, plus the adb scripts that took a 2021 TCL from "freezes on
+everything" back to smooth: factory bloat switched off, memory tuned, and a launcher that keeps it that
+way. No root, and every change can be undone.
+
+![TvClean home screen](docs/images/tvclean-inicio.png)
 
 > [!WARNING]
-> **Projeto pessoal, testado em uma única TV.** Faça backup antes e confira cada mudança no aparelho.
-> **Não use se você depende de acessibilidade:** o leitor de tela, a leitura em voz alta e o assistente
-> de voz ficam desligados, e o launcher ocupa o serviço de acessibilidade do sistema.
+> **Personal project, tested on one TV so far** ([list](#tested-tvs)). Back up first and check each
+> change on your TV. **Do not use it if you rely on accessibility features:** the screen reader,
+> text-to-speech and voice assistant get switched off, and the launcher takes the system's
+> accessibility service for its Home-key bar.
 
-**Sumário:** [O problema](#o-problema) · [Antes e depois](#antes-e-depois) ·
-[O que tem](#o-que-tem) · [Instalar](#instalar) · [Desfazer](#desfazer) ·
-[Segurança](#segurança) · [Limitações](#limitações) · [Estrutura](#estrutura-do-repositório)
+**Contents:** [Why](#why) · [Before and after](#before-and-after) · [Features](#features) ·
+[Install](#install) · [Tested TVs](#tested-tvs) · [Undo](#undo) · [Security](#security) ·
+[Limitations](#limitations) · [Contributing](#contributing)
 
-## O problema
+## Why
 
-A TV estava quase inutilizável:
+Cheap smart TVs ship with ~1 GB of RAM, a full disk and a home screen that loads ads and
+recommendations from the internet. On the TV this started on:
 
-- **Disco cheio:** 100% do armazenamento ocupado (3,8 MB livres de 2,5 GB). Só o Google Play Services
-  guardava 1,2 GB.
-- **Sem atualizações:** sem espaço, a Play Store não atualizava nada. YouTube, Chromecast, WebView e
-  outros ficaram presos em versões antigas.
-- **Travamentos:** com ~105 MB de RAM livre, abrir um app ou voltar ao Início mostrava tela branca ou
-  preta por vários segundos.
+- **The disk was 100% full** (3.8 MB free of 2.5 GB); Google Play Services alone kept 1.2 GB.
+- **No updates:** with no space, the Play Store could not update YouTube, Chromecast or WebView.
+- **Freezes:** with ~105 MB of free RAM, opening an app or going back Home showed a blank screen for
+  seconds.
 
-## Antes e depois
+## Before and after
 
-### A TV inteira (todo o projeto aplicado)
+### The whole TV, with everything applied
 
-| | Antes | Depois |
+| | Before | After |
 |---|---:|---:|
-| Armazenamento usado | 100% (3,8 MB livres) | ~55% (1,1 GB livres) |
-| RAM livre em uso normal | ~105 MB | ~200–380 MB |
-| Atualizações pela Play Store | Bloqueadas | Funcionando |
+| Storage used | 100% (3.8 MB free) | ~55% (1.1 GB free) |
+| Free RAM in normal use | ~105 MB | ~200–380 MB |
+| Play Store updates | Blocked | Working |
 
-### Launcher original × TvClean
+### Stock launcher vs TvClean
 
-| Launcher original (Google TV) | TvClean |
+| Stock launcher (Android TV) | TvClean |
 |---|---|
-| ![Launcher original](docs/images/original-inicio.png) | ![TvClean](docs/images/tvclean-inicio.png) |
+| ![Stock launcher](docs/images/original-inicio.png) | ![TvClean](docs/images/tvclean-inicio.png) |
 
-Medido na mesma TV, no mesmo dia (23/10/2026), com os mesmos comandos para os dois:
+Same TV, same day, same commands for both:
 
-| | Original | TvClean | Como foi medido |
+| | Stock | TvClean | How |
 |---|---:|---:|---|
-| Abrir o Início com o launcher fechado | 0,75–1,19 s | 0,54–1,28 s | `am start -W` (HOME), 3 vezes |
-| Memória do launcher | 85 MB | 76 MB | `dumpsys meminfo <pacote>`, TOTAL PSS |
-| Tamanho do app | — | 249 KB | APK final |
+| Opening Home with the launcher closed | 0.75–1.19 s | 0.54–1.28 s | `am start -W` on HOME, 3 runs |
+| Launcher memory | 85 MB | 76 MB | `dumpsys meminfo <package>`, TOTAL PSS |
+| App size | — | 249 KB | final APK |
 
-No tempo de abertura os dois empatam: a diferença está dentro da variação entre medições. O ganho
-do TvClean está no resto: menos coisa rodando ao fundo, nada de recomendações carregando da internet,
-e a manutenção que impede a TV de voltar ao estado de antes.
+Opening Home is a tie: the difference is within run-to-run noise. The gain is everywhere else: less
+running in the background, nothing loading from the internet to draw the home screen, and a maintenance
+job that stops the TV from drifting back to how it was.
 
-> As capturas pixelam pôsteres e capas (arte de terceiros) e a cidade do clima no cabeçalho.
+> Screenshots have posters and the weather's city pixelated.
 
-## O que tem
+## Features
 
 ### Launcher (`launcher/`)
 
-App Android em Java puro, sem bibliotecas de terceiros.
+Plain Java, no third-party libraries, 249 KB.
 
 | | |
 |---|---|
-| ![Todos os apps](docs/images/tvclean-apps.png) | ![Entradas](docs/images/tvclean-entradas.png) |
-| ![Saúde da TV](docs/images/tvclean-tv.png) | ![Dar nome a uma entrada](docs/images/tvclean-menu-entrada.png) |
+| ![All apps](docs/images/tvclean-apps.png) | ![Inputs](docs/images/tvclean-entradas.png) |
+| ![TV health](docs/images/tvclean-tv.png) | ![Naming an input](docs/images/tvclean-menu-entrada.png) |
 
-- **Início** com o que está em alta no streaming em foco ([TMDB](https://www.themoviedb.org/)) e o
-  vídeo mais popular do YouTube, trocando a cada 3 horas. Nada com classificação 18 (ou sem
-  classificação) aparece.
-- **Favoritos:** segure OK (ou aperte Menu) num app para fixar, mover ou esconder. O último app usado
-  vem primeiro, marcado como **Continuar**.
-- **Entradas** (HDMI, AV, antena) com estado ao vivo e nome personalizável, como "PS5".
-- **Aba TV:** memória, armazenamento, tempo ligado, o que mais gasta memória e o botão
-  **Liberar memória e reaplicar ajustes**.
-- **Manutenção automática:** a cada 6 horas o launcher redesliga o que a TCL religou e reaplica os
-  ajustes de memória, pela depuração da própria TV, sem PC.
-- **Barra de apps:** dentro de qualquer app, a casinha abre a barra por cima; um segundo aperto vai ao
-  Início. Segurar a casinha abre um painel de atalhos.
+- **Home** shows what is trending on the focused streaming app ([TMDB](https://www.themoviedb.org/)) and
+  the most popular YouTube video, changing every 3 hours. Nothing rated 18+ (or unrated) is shown.
+- **Favorites:** hold OK (or press Menu) on an app to pin, move or hide it. The last app used comes
+  first, tagged **Continuar** (continue).
+- **Inputs** (HDMI, AV, antenna) with live status and names you choose, like "PS5".
+- **TV tab:** memory, storage, uptime, what uses the most memory, and a **free memory and re-apply
+  tweaks** button.
+- **Self-maintenance:** after every boot and every 6 hours, the launcher switches off again whatever the
+  manufacturer switched back on and re-applies the memory tweaks, through the TV's own debugging, no PC.
+- **App bar:** inside any app, Home opens a bar of your apps over it; a second press goes Home. Holding
+  Home opens a shortcuts panel.
 
-  ![Barra de apps sobre um app (wireframe)](docs/images/wireframe-barra.svg)
-- Clima no cabeçalho ([Open-Meteo](https://open-meteo.com/)) e um protetor de tela com as imagens em
-  alta, relógio e clima.
+  ![App bar over an app (wireframe)](docs/images/wireframe-barra.svg)
+- Weather in the header ([Open-Meteo](https://open-meteo.com/)) and a screensaver with the trending
+  pictures, clock and weather.
 
-### Scripts da TV (`tv/`)
+### TV scripts (`tv/`)
 
-PowerShell + adb, rodando no PC. Todos conferem se o aparelho é **esta TV** (modelo e número de série)
-e param se não for.
+PowerShell + adb, run from a PC. They remember your TV's serial number on first use and refuse to touch
+any other device after that.
 
-| Script | O que faz |
+| Script | What it does |
 |---|---|
-| `debloat.ps1` | Desliga os apps de `debloat.txt` e aplica os ajustes de `common.ps1`. `-Undo` desfaz. |
-| `check.ps1` | Acha o que voltou depois de um reboot e corrige. `-ReportOnly` só mostra. |
-| `cleanup.ps1` | Libera espaço: dados e atualizações dos apps desligados, APKs largados, caches. |
-| `measure.ps1` | Mede a abertura dos apps (a frio e a quente), a volta ao Início e o uso de swap. |
-| `startup.ps1` | Cronometra o Início em cenários diferentes (`-Scenario home`, `killed`, `dream`, `reboot`). |
+| `debloat.ps1` | Switches off your model's list from [`tv/devices/`](tv/devices/README.md) and applies the tweaks. `-Undo` reverts. |
+| `check.ps1` | Finds what came back after a reboot and fixes it. `-ReportOnly` only shows. |
+| `cleanup.ps1` | Frees storage: data and updates of switched-off apps, leftover APKs, caches. |
+| `measure.ps1` | Times app starts (cold and warm), going back Home and swap use. |
+| `startup.ps1` | Times the home screen in several scenarios (`-Scenario home`, `killed`, `dream`, `reboot`). |
 
-## Instalar
+## Install
 
-### Requisitos
+On the TV: **Settings → Device preferences → About**, press OK on *Build* 7 times, then turn on
+**Developer options → USB debugging**. Many TVs (this TCL included) then accept adb over the network on
+port 5555; write down the TV's IP (Settings → Network).
 
-- Windows com PowerShell 5.1+ e o `adb` do Android SDK Platform-Tools.
-- JDK 17 e Android SDK com `platforms/android-34` e `build-tools/34.0.0`. O build não usa Gradle:
-  `aapt2 → javac → d8 → zipalign → apksigner`.
-- Na TV: **Opções do desenvolvedor → Depuração USB** ligada. Nesta TCL isso já abre o adb pela rede,
-  na porta 5555.
+### Quick: the ready-made APK
 
-### Chaves (opcionais)
+Download `TvClean.apk` from [Releases](https://github.com/MatheusJorgee/TvClean/releases/latest). It has
+no API keys inside, so the home screen shows your apps without the trending pictures
+([how to add them](#trending-pictures-optional)).
 
-Sem chaves o launcher funciona, só não mostra o que está em alta. Crie fora do Git (já ignorados):
-
-- `tv/tmdb.key`: chave ou token de leitura da [API do TMDB](https://www.themoviedb.org/settings/api).
-- `tv/youtube.key`: chave da YouTube Data API v3, restrita ao app `com.tvclean.home` + SHA-1 do
-  certificado.
-- `tv/city.txt`: cidade do clima. Sem ele, a TV usa a localização aproximada da conexão.
-
-### Compilar e instalar
+**Windows**, from a clone of this repository:
 
 ```powershell
-.\launcher\build.ps1                            # gera launcher\build\TvClean.apk
-.\launcher\install.ps1 -TvHost 192.168.x.x      # instala, vira o Início e desliga o launcher de fábrica
-.\tv\debloat.ps1 -TvHost 192.168.x.x            # primeira vez: desliga os apps da lista e aplica os ajustes
-.\tv\check.ps1 -TvHost 192.168.x.x -ReportOnly  # confere: deve terminar em "Tudo em ordem."
+.\launcher\install.ps1 -TvHost 192.168.x.x -Apk $HOME\Downloads\TvClean.apk
+.\tv\debloat.ps1 -TvHost 192.168.x.x      # optional: switch off factory apps (your model's list) and tune memory
 ```
 
-Se o PowerShell recusar os scripts, rode com `powershell -ExecutionPolicy Bypass -File <script>`.
+**Any system with adb** (Windows, macOS, Linux):
 
-Depois de instalar ou atualizar o launcher:
+```sh
+adb connect 192.168.x.x:5555
+adb install TvClean.apk
+adb shell appops set com.tvclean.home GET_USAGE_STATS allow
+adb shell pm disable-user --user 0 com.google.android.tvlauncher            # Android TV home
+adb shell pm disable-user --user 0 com.google.android.apps.tv.launcherx     # Google TV home (if present)
+adb shell cmd package set-home-activity com.tvclean.home/.MainActivity
+adb shell settings put secure enabled_accessibility_services com.tvclean.home/com.tvclean.home.KeyService
+adb shell settings put secure accessibility_enabled 1                      # app bar and Home-key panel
+```
 
-1. Rode `.\tv\check.ps1 -TvHost 192.168.x.x`: a atualização desliga o serviço da barra e o script religa.
-2. **Reinicie a TV:** a TCL só ativa esse serviço na inicialização.
-3. Na primeira vez que usar **Liberar memória** (aba TV), a TV pergunta "Permitir a depuração USB?"
-   para o próprio launcher: marque **Sempre permitir**.
+Then **restart the TV once**: some TVs (TCL included) only start the launcher's Home-key service at
+boot. The first time you use *Liberar memória* (TV tab), the TV asks "Allow USB debugging?" for the
+launcher itself: tick **Always allow**.
 
-O keystore de assinatura fica em `%USERPROFILE%\.tvclean` (ou em `TVCLEAN_KEYS`) e é criado no
-primeiro build. **Guarde um backup dessa pasta:** atualizações precisam da mesma chave.
+### Trending pictures (optional)
 
-## Desfazer
+With a free [TMDB API key](https://www.themoviedb.org/settings/api), on the downloaded APK:
+
+```sh
+adb shell am start -n com.tvclean.home/.MainActivity --es tmdb_key YOUR_TMDB_KEY
+```
+
+### Build from source
+
+Needs Windows with PowerShell 5.1+, JDK 17 and the Android SDK (`platforms/android-34`,
+`build-tools/34.0.0`). No Gradle: `aapt2 → javac → d8 → zipalign → apksigner`.
 
 ```powershell
-.\tv\debloat.ps1 -TvHost 192.168.x.x -Undo              # religa tudo e volta os ajustes ao padrão
-.\launcher\restore.ps1 -TvHost 192.168.x.x -Uninstall   # volta o launcher de fábrica e remove o TvClean
+.\launcher\build.ps1                         # launcher\build\TvClean.apk
+.\launcher\install.ps1 -TvHost 192.168.x.x
+.\tv\check.ps1 -TvHost 192.168.x.x -ReportOnly   # should end with "Tudo em ordem."
 ```
 
-Nada é desinstalado da TV: os apps só ficam desligados (`pm disable-user`).
+Optional, outside git (already ignored): `tv/tmdb.key`, `tv/youtube.key` (YouTube Data API v3, restricted
+to `com.tvclean.home` + your certificate's SHA-1) and `tv/city.txt` (weather city; without it the TV is
+located by its IP). `-NoKeys` leaves all three out, for an APK you will share.
 
-## Segurança
+The signing keystore is created on the first build in `%USERPROFILE%\.tvclean` (or `TVCLEAN_KEYS`).
+**Back that folder up:** updates must be signed with the same key. If PowerShell refuses to run the
+scripts, use `powershell -ExecutionPolicy Bypass -File <script>`.
 
-- **Depuração pela rede fica ligada** (a manutenção automática depende dela). Qualquer aparelho na sua
-  rede pode pedir acesso: **nunca aceite** "Permitir a depuração USB?" se não foi você que pediu.
-- **As chaves de API vão dentro do APK.** Depois de distribuído, o APK não guarda segredo: restrinja as
-  chaves no provedor, use um projeto do Google Cloud sem faturamento e revogue qualquer chave exposta.
-- O serviço de acessibilidade lê só a tecla Início, nunca o conteúdo da tela.
-- Ficam fora do Git: `tv/*.key`, `tv/tv.serial`, `tv/city.txt`, `backup/`, `tv/measurements/`,
-  `launcher/build/` e o keystore. Antes de um commit, confira com `git status --short`.
+After updating the launcher, run `.\tv\check.ps1 -TvHost <ip>` (an update switches the Home-key service
+off) and restart the TV.
 
-## Limitações
+## Tested TVs
 
-- A TCL só liga serviços de acessibilidade no boot: depois de atualizar o launcher, reinicie a TV.
-- Teclas enviadas pelo adb não passam pelo filtro de acessibilidade desta TV. Teste a barra e o painel
-  com o controle de verdade.
-- Sem root não dá para ler o "continuar assistindo" dos streamings nem reiniciar a TV pelo app.
-- A TCL religa alguns apps sozinha no boot. A manutenção automática (no máximo a cada 6 horas)
-  desliga de novo; para corrigir na hora, use **Liberar memória** na aba TV ou `tv\check.ps1`.
+| TV | `ro.product.name` | Android | App list | Status |
+|---|---|---|---|---|
+| TCL FHD 2021, MediaTek MT9221, 943 MB RAM | `C06_2K_GB` | 11 | [yes](tv/devices/C06_2K_GB.txt) | Daily use |
 
-## Estrutura do repositório
+The launcher should run on any Android TV 8+. **Tried it on yours?**
+[Open a TV report](https://github.com/MatheusJorgee/TvClean/issues/new?template=tv-report.yml), good or bad,
+and it goes in this table.
+
+## Undo
+
+```powershell
+.\tv\debloat.ps1 -TvHost 192.168.x.x -Undo              # switch everything back on, default settings
+.\launcher\restore.ps1 -TvHost 192.168.x.x -Uninstall   # stock home back, TvClean removed
+```
+
+Nothing is uninstalled from the TV: apps are only switched off (`pm disable-user`).
+Without the scripts: `adb shell pm enable <package>` for each stock launcher, then `adb uninstall com.tvclean.home`.
+
+## Security
+
+- **Network debugging stays on** (the self-maintenance needs it). Any device on your network can ask
+  for access: **never accept** "Allow USB debugging?" on the TV unless you asked for it.
+- **API keys you build in travel inside the APK** and are not secret once shared. Restrict them at the
+  provider, use a Google Cloud project without billing, and build shared APKs with `-NoKeys`.
+- The accessibility service reads only the Home key, never what is on screen.
+
+## Limitations
+
+- **The app's text is in Brazilian Portuguese**, and trending titles come from Brazil's catalog.
+  Translations are welcome ([CONTRIBUTING](CONTRIBUTING.md)).
+- Some TVs only start accessibility services at boot: restart after installing or updating.
+- Keys sent with `adb shell input` do not reach the accessibility service on the tested TV; try the app
+  bar and the panel with the real remote.
+- Without root it cannot read the streaming apps' "continue watching" rows or restart the TV itself.
+
+## Contributing
+
+Reports from other TVs are the most useful thing right now: a
+[TV report](https://github.com/MatheusJorgee/TvClean/issues/new?template=tv-report.yml) or an app list
+for your model in [`tv/devices/`](tv/devices/README.md). See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ```text
-launcher/
-  src/com/tvclean/home/   código do app (tela, barra, protetor de tela, manutenção)
-  res/  assets/           recursos e a fonte Plus Jakarta Sans
-  build.ps1  install.ps1  restore.ps1
-tv/
-  common.ps1              lista de ajustes e funções usadas por todos os scripts
-  debloat.txt             apps de fábrica que ficam desligados, com comentários
-  *.ps1                   debloat, check, cleanup, measure, startup
-docs/
-  images/                 capturas e wireframes usados neste README
-  plano-otimizacao.md     diagnóstico, medições e próximas etapas
+launcher/          Android app (src/com/tvclean/home), resources, build/install/restore scripts
+tv/                adb scripts; common.ps1 has the tweaks shared by all of them
+tv/devices/        factory apps to switch off, one file per TV model
+docs/              images for this README and the optimization notes (Portuguese)
 ```
 
-## Créditos
+## Credits
 
-- Inspirado em [cleanyourtv](https://github.com/Gathin23/cleanyourtv) (lista de apps da TCL 40S5400A,
-  mesma plataforma).
-- Títulos e imagens em alta: [TMDB](https://www.themoviedb.org/). Este produto usa a API do TMDB, mas
-  não é endossado nem certificado pelo TMDB. Vídeos em alta: YouTube Data API.
-- Fonte [Plus Jakarta Sans](https://github.com/tokotype/PlusJakartaSans), licença SIL OFL 1.1
-  (`launcher/assets/PlusJakartaSans-OFL.txt`).
+- Inspired by [cleanyourtv](https://github.com/Gathin23/cleanyourtv).
+- Trending titles and images: [TMDB](https://www.themoviedb.org/). This product uses the TMDB API but
+  is not endorsed or certified by TMDB. Trending videos: YouTube Data API.
+- Font: [Plus Jakarta Sans](https://github.com/tokotype/PlusJakartaSans), SIL OFL 1.1.
 
-## Licença
+## License
 
-[MIT](LICENSE). A fonte Plus Jakarta Sans segue a própria licença (SIL OFL 1.1).
+[MIT](LICENSE). The bundled font keeps its own license (SIL OFL 1.1).

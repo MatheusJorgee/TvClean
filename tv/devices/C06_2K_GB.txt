@@ -2,8 +2,8 @@
 # MediaTek MT9221 (mt5867), 943 MB RAM, low_ram. Firmware V8-T221T01.
 # Close twin of cleanyourtv examples/tcl-40s5400a (same platform, EU firmware).
 #
-# Apply:  .\tv\debloat.ps1 -TvHost <ip>
-# Undo:   .\tv\debloat.ps1 -TvHost <ip> -Undo
+# Used automatically on TVs whose ro.product.name is C06_2K_GB (this file's name).
+# Apply: .\tv\debloat.ps1 -TvHost <ip>    Undo: .\tv\debloat.ps1 -TvHost <ip> -Undo
 # Everything is DISABLED (pm disable-user), never uninstalled.
 #
 # Kept on purpose (used by the owner): Chromecast (apps.mediashell), phone remote (tv.remote.service),

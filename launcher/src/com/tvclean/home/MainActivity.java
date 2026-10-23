@@ -855,7 +855,7 @@ public class MainActivity extends Activity {
             // A renamed input still says which port it is on.
             String sub = (in.label.equals(in.port) ? "" : in.port.toLowerCase() + " · ") + in.status.toLowerCase();
             pill.addView(ui.text(sub, 22, 400, MUTED));
-            focusable(pill, 1.06f, 36, () -> launch(Sources.inputIntent(in)), () -> {
+            focusable(pill, 1.06f, 36, () -> launch(Sources.inputIntent(this, in)), () -> {
                 inputFocus = index;
                 scheduleHero(() -> showInput(in));
             });
@@ -955,7 +955,7 @@ public class MainActivity extends Activity {
 
     private void showInput(Sources.Input in) {
         boolean changed = !in.label.contentEquals(heroTitle.getText());
-        heroAction = () -> launch(Sources.inputIntent(in));
+        heroAction = () -> launch(Sources.inputIntent(this, in));
         heroButton.setText(in.tuner ? "Assistir TV" : "Abrir " + in.label);
         setBadge(in.tuner ? "Antena" : "Entrada", CHIP);
         setHeroTitle(in.label);
@@ -1149,9 +1149,14 @@ public class MainActivity extends Activity {
         });
     }
 
-    /** Runs the maintenance quietly (no prompt, no closing apps) at most every 6 hours. */
+    /**
+     * Runs the maintenance quietly (no prompt, no closing apps) after every boot, and at most every 6 hours
+     * otherwise: device_config values do not survive a reboot, and TCL switches its apps back on at boot.
+     */
     private void autoMaintenance() {
-        if (System.currentTimeMillis() - prefs.getLong("maint_at", 0) < 6 * 60 * 60 * 1000L) return;
+        long now = System.currentTimeMillis(), last = prefs.getLong("maint_at", 0);
+        boolean sinceBoot = last > now - SystemClock.elapsedRealtime();
+        if (sinceBoot && now - last < 6 * 60 * 60 * 1000L) return;
         saveMaintenance(Maintenance.run(this, false, 0));
     }
 
@@ -1249,7 +1254,7 @@ public class MainActivity extends Activity {
             st.setPadding(ui.px(10), 0, 0, 0);
             status.addView(st);
             card.addView(status);
-            focusable(card, 1.06f, 28, () -> launch(Sources.inputIntent(in)), null);
+            focusable(card, 1.06f, 28, () -> launch(Sources.inputIntent(this, in)), null);
             card.setOnLongClickListener(v -> {
                 openInputMenu(in, v);
                 return true;

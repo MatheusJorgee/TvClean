@@ -286,7 +286,7 @@ public class KeyService extends AccessibilityService {
 
         List<Sources.Input> inputs = Sources.inputs(this);
         if (!inputs.isEmpty()) list.addView(heading("Entradas"));
-        for (Sources.Input in : inputs) row(list, in.label + "   " + in.status.toLowerCase(), () -> open(Sources.inputIntent(in)));
+        for (Sources.Input in : inputs) row(list, in.label + "   " + in.status.toLowerCase(), () -> open(Sources.inputIntent(this, in)));
 
         list.addView(heading("TV"));
         TextView status = ui.text("", 20, 500, MUTED);

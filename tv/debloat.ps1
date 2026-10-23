@@ -1,8 +1,9 @@
-# Applies tv\debloat.txt and the tuning in common.ps1 over adb, or undoes them with -Undo.
+# Applies this TV's list in tv\devices and the tuning in common.ps1 over adb, or undoes them with -Undo.
 #   .\tv\debloat.ps1 -TvHost <ip-da-tv> [-Undo]
 param([Parameter(Mandatory = $true)][string]$TvHost, [switch]$Undo)
 . "$PSScriptRoot\common.ps1"
 $target = Connect-Tv $TvHost
+$DebloatPackages = Get-DebloatPackages
 
 if ($Undo) {
     foreach ($p in $DebloatPackages) { "$p => $(Tv pm enable $p)" }

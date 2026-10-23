@@ -1,0 +1,55 @@
+name: TV report
+description: Tried TvClean on your TV? Tell us how it went, good or bad.
+title: "TV report: <brand> <model>"
+labels: ["tv report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks! Every report helps the next person with the same TV. Portuguese is fine too.
+        Run these and paste the answers below:
+        ```
+        adb shell getprop ro.product.manufacturer
+        adb shell getprop ro.product.model
+        adb shell getprop ro.product.name
+        adb shell getprop ro.build.version.release
+        ```
+  - type: input
+    id: tv
+    attributes:
+      label: TV (brand and model on the box)
+      placeholder: TCL 40S5400A
+    validations:
+      required: true
+  - type: textarea
+    id: props
+    attributes:
+      label: Output of the four commands above
+      render: text
+    validations:
+      required: true
+  - type: dropdown
+    id: what
+    attributes:
+      label: What did you use?
+      multiple: true
+      options:
+        - Launcher (APK from Releases)
+        - Launcher (built myself)
+        - tv/debloat.ps1
+        - tv/check.ps1 / cleanup.ps1
+  - type: checkboxes
+    id: works
+    attributes:
+      label: What worked?
+      options:
+        - label: Home screen and app row
+        - label: Inputs (HDMI / antenna)
+        - label: Home key bar inside apps / hold Home panel (after a reboot)
+        - label: Screensaver
+        - label: "TV" tab and "Liberar memória"
+  - type: textarea
+    id: notes
+    attributes:
+      label: What went wrong, or anything else
+      description: Errors, what looked cut off or broken (a screenshot helps), how it felt compared to before.

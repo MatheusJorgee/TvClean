@@ -1,16 +1,13 @@
 # Shared by the tv\ and launcher\ scripts: which TV this is and what it should look like after the cleanup.
 
-# The scripts only talk to this TV: the router could hand its IP to another device. The model is
-# checked every time; the serial number is remembered on first use in tv\tv.serial (git-ignored).
+# The scripts only talk to one TV: the router could later hand its IP to another device. The serial
+# number is remembered on first use in tv\tv.serial (git-ignored) and checked on every run after that.
 function Connect-Tv([string]$TvHost) {
     $target = "$TvHost`:5555"
     adb connect $target | Out-Null
-    $device = ((adb -s $target shell getprop ro.product.device) -join '').Trim()
-    $name = ((adb -s $target shell getprop ro.product.name) -join '').Trim()
-    $serial = ((adb -s $target shell getprop ro.serialno) -join '').Trim()
-    if ($device -ne 'C06' -or $name -ne 'C06_2K_GB') {
-        throw "O aparelho em $target nao e a TV TCL esperada (device='$device', name='$name'). Nada foi feito."
-    }
+    $prop = { param($p) ((adb -s $target shell getprop $p) -join '').Trim() }
+    $serial = & $prop ro.serialno
+    if (-not (& $prop ro.build.version.sdk)) { throw "Nenhuma TV respondeu em $target. Confira o IP e a depuracao USB. Nada foi feito." }
     $known = "$PSScriptRoot\tv.serial"
     if (Test-Path $known) {
         if ((Get-Content $known -Raw).Trim() -ne $serial) {
@@ -19,15 +16,26 @@ function Connect-Tv([string]$TvHost) {
     } elseif ($serial) {
         Set-Content -Encoding ascii $known $serial
     }
+    Write-Host "TV: $(& $prop ro.product.manufacturer) $(& $prop ro.product.model) ($(& $prop ro.product.name)), Android $(& $prop ro.build.version.release)"
     return $target
 }
 
-# Packages from debloat.txt (comments and blank lines dropped).
-$DebloatPackages = Get-Content "$PSScriptRoot\debloat.txt" |
-    ForEach-Object { ($_ -replace '#.*$', '').Trim() } | Where-Object { $_ }
+# The apps to switch off on this TV: tv\devices\<ro.product.name>.txt (comments and blank lines dropped).
+# A TV without a list only gets the generic part (home screen, memory tuning); see tv\devices\README.md.
+function Get-DebloatPackages {
+    $name = ((Tv getprop ro.product.name) -join '').Trim()
+    $list = "$PSScriptRoot\devices\$name.txt"
+    if (-not (Test-Path $list)) {
+        Write-Warning "Sem lista de apps para '$name' em tv\devices: so os ajustes gerais serao aplicados."
+        return @()
+    }
+    Get-Content $list | ForEach-Object { ($_ -replace '#.*$', '').Trim() } | Where-Object { $_ }
+}
 
-# Replaced by launcher/ and kept off (install.ps1 disables them; listed here so check.ps1 watches them).
-$HomePackages = 'com.google.android.tvlauncher', 'com.google.android.tungsten.setupwraith'
+# Stock home screens TvClean replaces (install.ps1 disables the installed ones, restore.ps1 brings them
+# back): Android TV, Google TV and the setup wizard, which also answers to the Home key.
+$HomePackages = 'com.google.android.tvlauncher', 'com.google.android.apps.tv.launcherx',
+    'com.google.android.tungsten.setupwraith'
 
 # Streaming apps may not run in the background when they are not on screen (no jobs, alarms or
 # services). YouTube Music is left out so it keeps playing with the screen on another app.

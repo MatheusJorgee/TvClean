@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security problem
+    url: https://github.com/MatheusJorgee/TvClean/security/advisories/new
+    about: Report it privately, not in a public issue.

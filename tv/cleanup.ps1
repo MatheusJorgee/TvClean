@@ -1,10 +1,11 @@
-# Frees storage: for every package that debloat.txt keeps disabled, drops its data and its Play Store
+# Frees storage: for every package this TV's list (tv\devices) keeps disabled, drops its data and its Play Store
 # update (back to the factory version) and disables it again right away; deletes TCL's leftover
 # download APKs; trims app caches. Touches nothing on screen.
 #   .\tv\cleanup.ps1 -TvHost <ip-da-tv>
 param([Parameter(Mandatory = $true)][string]$TvHost)
 . "$PSScriptRoot\common.ps1"
 $target = Connect-Tv $TvHost
+$DebloatPackages = Get-DebloatPackages
 
 $before = (Tv df /data | Select-Object -Last 1) -split '\s+'
 foreach ($p in $DebloatPackages + $HomePackages) {
